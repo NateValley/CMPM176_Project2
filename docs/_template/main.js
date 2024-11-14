@@ -1,5 +1,6 @@
 title = "";
-
+//http://localhost:4000/?[_template]
+// npm run watch_games
 description = `
 `;
 
@@ -35,6 +36,7 @@ let courseDifficulty;
 let instructionTicks;
 let holeStartingTicks;
 let courseTime;
+let babyMode = false;
 
 function update() {
   if (!ticks) {
@@ -58,6 +60,7 @@ function update() {
 let easyButton;
 let mediumButton;
 let hardButton;
+let babyButton;
 
 function initTitle() {
   state = "title";
@@ -76,11 +79,21 @@ function initTitle() {
     onClick: () => initInGame(1),
   });
   hardButton = getButton({
-    text: "Hard",
+    text: "Harder",
     pos: { x: 15, y: 65 },
     size: { x: 50, y: 7 },
     isToggle: false,
     onClick: () => initInGame(2),
+  });
+  babyButton = getButton({
+    text: "Practice mode",
+    pos: {x:70, y:5},
+    size: { x: 80, y: 7 },
+    isToggle: false,
+    onClick: () =>{ babyMode = !babyMode;
+      if(babyMode){alert("Practice Mode is now active!\nYou now have infinite amount of attempts on each hole!")}
+      else{alert("Practice Mode is now DEACTIVATED!\nYou now have a finite amount of attempts on each hole!");}
+    },    
   });
   initBall();
   createHole(103);
@@ -95,6 +108,7 @@ function updateTitle() {
   updateButton(mediumButton);
   text("6 holes", 75, 58);
   updateButton(hardButton);
+  updateButton(babyButton);
   text("9 holes", 75, 68);
   text("Click button to start", 20, 79);
 }
@@ -138,14 +152,14 @@ function updateInGame() {
 function drawBallAndTime() {
   color("black");
   char("a", 3, 4);
-  text(`x${ballCount}`, 9, 3);
+  if(babyMode){text("INF",9,3);}else{text(`x${ballCount}`, 9, 3);}//Font doesnt seem to support the ∞ sign
   drawTime(courseTime, 110, 3);
 }
 
 const holeSeeds = [
-  [71, 45, 9],
-  [49, 7, 98, 31, 54, 99],
-  [15, 4, 67, 5, 90, 53, 79, 85, 78],
+  [71, 42, 21],
+  [9, 7, 98, 310, 54, 157],
+  [30, 24, 670, 45, 92, 533, 80, 69, 420],
 ];
 
 function goToNextHole() {
@@ -199,7 +213,7 @@ function updatePowerState() {
     play("laser");
     ball.vel.set().addWithAngle(ball.angle, ball.power * 0.5 * ball.basePower);
     ball.state = "fly";
-    ballCount--;
+    if(!babyMode){ballCount--;}
   }
 }
 
