@@ -38,6 +38,8 @@ let holeStartingTicks;
 let courseTime;
 let babyMode = false;
 
+let isEventTriggered = false;
+
 function update() {
   if (!ticks) {
     document.title = "SKY GOLF";
@@ -146,6 +148,7 @@ function updateInGame() {
     text(`HOLE ${holeCount}`, 10, 95);
   }
   courseTime++;
+  triggerPhysicsEvent(40, 3);
   drawBallAndTime();
 }
 
@@ -564,4 +567,24 @@ function drawTime(time, x, y) {
 
 function getPaddedNumber(v, digit) {
   return ("0000" + v).slice(-digit);
+}
+
+function triggerPhysicsEvent(x, y)
+{
+  if(ballCount <= 2)
+  {
+    if (ball.power <= 2 && ball.basePower <= 2)
+      {
+        ball.power += 2;
+        ball.basePower += 2;
+      }
+    
+    this.globalAlpha = 0.5;
+    color("light_red");
+    rect(0, 0, 400, 7);
+    
+    color("black");
+    char("a", 3, 4);
+    text("POWER UP!", x, y);
+  }
 }
